@@ -17,7 +17,7 @@ byte floatSwitchPin = 6;
 byte led = 13; // used for testing, this will be water pump when it's connected
 
 int receivedDataFromSerial = 0;
-int receivedDataFromSerial2 = 1;
+float receivedDataFromSerial2 = 0;
 
 void setup() { 
   Serial.begin(9600);
@@ -44,19 +44,19 @@ void loop() {
         break;
       case 4:
         // open pump
-        while(receivedDataFromSerial == 4 && receivedDataFromSerial2 == 1) {
+        while(receivedDataFromSerial == 4 && receivedDataFromSerial2 == 0) {
           while(Serial.available() > 0){
-            receivedDataFromSerial2 = Serial.parseInt();
+            receivedDataFromSerial2 = Serial.parseFloat();
           }
         }
         
         if(receivedDataFromSerial2 != 1) {
           digitalWrite(led, HIGH);
-          delay(receivedDataFromSerial2);
+          delay(receivedDataFromSerial2);          
           digitalWrite(led, LOW);
           
           receivedDataFromSerial = 0;
-          receivedDataFromSerial2 = 1;
+          receivedDataFromSerial2 = 0;
         }
         
         break;
@@ -69,6 +69,7 @@ void loop() {
         // default is optional
         Serial.println("Error!");
     }
+    
     Serial.println();
     delay(1000);
   }
